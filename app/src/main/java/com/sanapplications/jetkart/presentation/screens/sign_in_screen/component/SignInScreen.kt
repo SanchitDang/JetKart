@@ -1,7 +1,7 @@
 package com.sanapplications.jetkart.presentation.screens.sign_in_screen.component
 
-
 import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sanapplications.jetkart.R
+import com.sanapplications.jetkart.domain.model.AuthState
+import com.sanapplications.jetkart.domain.model.AuthViewModel
 import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.common.CustomTextField
 import com.sanapplications.jetkart.presentation.common.component.DefaultBackArrow
@@ -33,9 +37,8 @@ import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryLightColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 
-
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var checkBox by remember {
@@ -48,6 +51,16 @@ fun LoginScreen(navController: NavController) {
         mutableStateOf(false)
     }
 
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+    LaunchedEffect(authState.value) {
+        when (authState.value){
+            is AuthState. Authenticated -> navController.navigate(AuthScreen.SignInSuccess.route)
+            is AuthState. Error -> Toast.makeText(context,
+                (authState.value as AuthState. Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -147,6 +160,7 @@ fun LoginScreen(navController: NavController) {
             emailErrorState.value = !isEmailValid
             passwordErrorState.value = !isPassValid
             if (isEmailValid && isPassValid) {
+                authViewModel.signIn(email.text, password.text)
                 navController.navigate(AuthScreen.SignInSuccess.route)
             }
         }

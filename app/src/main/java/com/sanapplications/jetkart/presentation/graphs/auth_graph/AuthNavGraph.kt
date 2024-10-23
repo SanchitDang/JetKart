@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.graphs
+package com.sanapplications.jetkart.presentation.graphs.auth_graph
 
 import android.app.Activity
 import android.content.Context
@@ -10,16 +10,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.sanapplications.jetkart.domain.model.AuthViewModel
+import com.sanapplications.jetkart.presentation.graphs.Graph
 import com.sanapplications.jetkart.presentation.screens.forget_password_screen.component.ForgetPasswordScreen
-import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
 import com.sanapplications.jetkart.presentation.screens.on_boarding_screen.component.SplashScreen
 import com.sanapplications.jetkart.presentation.screens.otp_screen.component.OTPScreen
 import com.sanapplications.jetkart.presentation.screens.sign_in_screen.component.LoginScreen
 import com.sanapplications.jetkart.presentation.screens.sign_success_screen.component.SignInScreen
 import com.sanapplications.jetkart.presentation.screens.sign_up_screen.component.SignUpScreen
 
-
-fun NavGraphBuilder.authNavGraph(navController: NavHostController, context: Context) {
+fun NavGraphBuilder.authNavGraph(navController: NavHostController, context: Context, authViewModel: AuthViewModel) {
     navigation(
         route = Graph.AUTHENTICATION,
         startDestination = AuthScreen.OnBoardingScreen.route
@@ -51,7 +51,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, context: Cont
                 }
 
             }
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController, authViewModel = authViewModel)
         }
         composable(AuthScreen.ForgetPasswordScreen.route) {
             ForgetPasswordScreen(navController = navController)
@@ -60,11 +60,10 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, context: Cont
             OTPScreen(navController = navController)
         }
         composable(AuthScreen.SignUpScreen.route) {
-            SignUpScreen(navController = navController)
+            SignUpScreen(navController = navController, authViewModel = authViewModel)
         }
         composable(AuthScreen.SignInSuccess.route) {
             SignInScreen(navController = navController)
         }
-
     }
 }
