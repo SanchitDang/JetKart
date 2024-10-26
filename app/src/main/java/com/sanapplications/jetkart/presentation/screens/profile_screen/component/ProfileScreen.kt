@@ -1,5 +1,6 @@
 package com.sanapplications.jetkart.presentation.screens.profile_screen.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +33,9 @@ import com.sanapplications.jetkart.presentation.common.component.DefaultBackArro
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.domain.model.AuthViewModel
+import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.graphs.Graph
+import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 
 @Composable
@@ -69,7 +73,7 @@ fun ProfileScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,140 +103,71 @@ fun ProfileScreen(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(60.dp))
+        
+        Spacer(modifier = Modifier.height(40.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-
-                .background(Color(0x8DB3B0B0), shape = RoundedCornerShape(10.dp))
-                .clip(RoundedCornerShape(10.dp))
-                .clickable {
-
-                }
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.user_icon),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f), tint = MaterialTheme.colors.PrimaryColor
-            )
-            Text("Profile Picture", modifier = Modifier.weight(0.2f))
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_right),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f),
-                tint = MaterialTheme.colors.TextColor
-            )
-        }
+        TextField(
+            value = authViewModel.userFirstName,
+            onValueChange = { newName ->
+                authViewModel.updateFirstName(newName)
+            },
+            label = { Text("First Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(15.dp))
 
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-
-                .background(Color(0x8DB3B0B0), shape = RoundedCornerShape(10.dp))
-                .clip(RoundedCornerShape(10.dp))
-                .clickable {
-
-                }
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.bell),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f), tint = MaterialTheme.colors.PrimaryColor
-            )
-            Text("Notification", modifier = Modifier.weight(0.2f))
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_right),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f),
-                tint = MaterialTheme.colors.TextColor
-            )
-        }
-
+        TextField(
+            value = authViewModel.userLastName,
+            onValueChange = { newLastName ->
+                authViewModel.updateLastName(newLastName)
+            },
+            label = { Text("Last Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(15.dp))
 
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-
-                .background(Color(0x8DB3B0B0), shape = RoundedCornerShape(10.dp))
-                .clip(RoundedCornerShape(10.dp))
-                .clickable {
-
-                }
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.settings),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f), tint = MaterialTheme.colors.PrimaryColor
-            )
-            Text("Settings", modifier = Modifier.weight(0.2f))
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_right),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f),
-                tint = MaterialTheme.colors.TextColor
-            )
-        }
-
+        TextField(
+            value = authViewModel.userEmail,
+            onValueChange = { newEmail ->
+                authViewModel.updateEmail(newEmail)
+            },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(15.dp))
 
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-
-                .background(Color(0x8DB3B0B0), shape = RoundedCornerShape(10.dp))
-                .clip(RoundedCornerShape(10.dp))
-                .clickable {
-
-                }
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.question_mark),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f), tint = MaterialTheme.colors.PrimaryColor
-            )
-            Text("Help Center", modifier = Modifier.weight(0.2f))
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_right),
-                contentDescription = null,
-                modifier = Modifier.weight(0.05f),
-                tint = MaterialTheme.colors.TextColor
-            )
-        }
+        TextField(
+            value = authViewModel.userPhoneNumber,
+            onValueChange = { newPhone ->
+                authViewModel.updatePhoneNumber(newPhone)
+                Log.d("Number", newPhone)
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(15.dp))
 
+        TextField(
+            value = authViewModel.userAddress,
+            onValueChange = { newAddress ->
+                authViewModel.updateAddress(newAddress)
+            },
+            label = { Text("Address") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
+        Spacer(modifier = Modifier.height(15.dp))
+        
         Row(
             modifier = Modifier
-                .fillMaxWidth()
                 .height(70.dp)
+                .height(100.dp)
                 .background(Color(0x8DB3B0B0), shape = RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
+                .align(alignment = Alignment.CenterHorizontally)
                 .clickable {
                     authViewModel.signOut()
                 }
@@ -252,6 +187,12 @@ fun ProfileScreen(
                 modifier = Modifier.weight(0.05f),
                 tint = MaterialTheme.colors.TextColor
             )
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        CustomDefaultBtn(btnText = "Update Details", shapeSize = 10f) {
+            authViewModel.updateUserInDb()
         }
 
     }

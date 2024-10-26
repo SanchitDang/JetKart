@@ -162,8 +162,8 @@ fun LoginScreen(navController: NavController) {
             emailErrorState.value = !isEmailValid
             passwordErrorState.value = !isPassValid
             if (isEmailValid && isPassValid) {
-                authViewModel.signIn(email.text, password.text)
-                navController.navigate(AuthScreen.SignInSuccess.route)
+//                navController.navigate(AuthScreen.SignInSuccess.route)
+                authViewModel.signIn(email.text, password.text, navController)
             }
         }
         Column(

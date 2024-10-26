@@ -357,7 +357,7 @@ fun SignUpScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(20.dp))
                 CustomTextField(
-                    placeholder = "example: Dhaka, Bangladesh",
+                    placeholder = "Enter your address",
                     trailingIcon = R.drawable.location_point,
                     label = "Address",
                     keyboardType = KeyboardType.Password,
@@ -388,8 +388,8 @@ fun SignUpScreen(navController: NavController) {
                     addressErrorState.value = !isAddressValid
                     phoneNumberErrorState.value = !isPhoneValid
                     if (!isFNameValid && !isLNameValid && !isAddressValid && !isPhoneValid) {
-                        navController.navigate(AuthScreen.OTPScreen.route)
-                        authViewModel.signUp(email.text, password.text)
+//                        navController.navigate(AuthScreen.OTPScreen.route)
+                        authViewModel.signUp(email.text, password.text, firstName.text, lastName.text, phoneNumber.text, address.text, navController)
                     }
                 }
             }

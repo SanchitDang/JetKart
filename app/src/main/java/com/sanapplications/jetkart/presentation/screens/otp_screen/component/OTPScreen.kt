@@ -146,7 +146,7 @@ fun OTPScreen(navController: NavController) {
         Spacer(modifier = Modifier.fillMaxHeight(0.3f))
         CustomDefaultBtn(shapeSize = 50f, btnText = "Verify") {
             if ((otp1.text + otp2.text + otp3.text + otp4.text + otp5.text).length == 5) {
-                navController.navigate(AuthScreen.SignInScreen.route)
+                navController.navigate(AuthScreen.SignInSuccess.route)
             }
         }
         Spacer(modifier = Modifier.fillMaxHeight(0.3f))
