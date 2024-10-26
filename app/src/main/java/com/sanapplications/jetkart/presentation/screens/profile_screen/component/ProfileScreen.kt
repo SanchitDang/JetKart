@@ -25,15 +25,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.HorizontalAnchorable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sanapplications.jetkart.presentation.common.component.DefaultBackArrow
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 import com.sanapplications.jetkart.R
+import com.sanapplications.jetkart.domain.model.AuthViewModel
+import com.sanapplications.jetkart.presentation.graphs.Graph
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 
 @Composable
 fun ProfileScreen(
-    onBackBtnClick: () -> Unit
+    navController: NavController
 ) {
+
+    // Get the AuthViewModel instance
+    val authViewModel: AuthViewModel = viewModel()
+
+    // UI
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +56,7 @@ fun ProfileScreen(
         ) {
             Box(modifier = Modifier.weight(0.5f)) {
                 DefaultBackArrow {
-                    onBackBtnClick
+                    navController.popBackStack()
                 }
             }
             Box(modifier = Modifier.weight(0.7f)) {
@@ -225,7 +234,7 @@ fun ProfileScreen(
                 .background(Color(0x8DB3B0B0), shape = RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
-
+                    authViewModel.signOut()
                 }
                 .padding(5.dp),
             horizontalArrangement = Arrangement.SpaceBetween,

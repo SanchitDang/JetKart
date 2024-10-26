@@ -20,7 +20,6 @@ import com.sanapplications.jetkart.presentation.graphs.detail_graph.DetailScreen
 import com.sanapplications.jetkart.presentation.graphs.home_graph.HomeNavGraph
 import com.sanapplications.jetkart.presentation.graphs.home_graph.ShopHomeScreen
 
-
 @SuppressLint("RememberReturnType")
 @Composable
 fun HomeScreen(
@@ -33,7 +32,6 @@ fun HomeScreen(
     val topBarVisibilityState = remember {
         mutableStateOf(true)
     }
-
 
     Scaffold(
         scaffoldState = scaffoldState,

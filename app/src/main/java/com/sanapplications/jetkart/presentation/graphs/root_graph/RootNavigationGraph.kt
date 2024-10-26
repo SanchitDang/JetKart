@@ -10,7 +10,6 @@ import com.sanapplications.jetkart.presentation.graphs.Graph
 import com.sanapplications.jetkart.presentation.graphs.auth_graph.authNavGraph
 import com.sanapplications.jetkart.presentation.screens.home_screen.component.HomeScreen
 
-
 @Composable
 fun RootNavigationGraph(navHostController: NavHostController, context: Context, authViewModel: AuthViewModel) {
     NavHost(

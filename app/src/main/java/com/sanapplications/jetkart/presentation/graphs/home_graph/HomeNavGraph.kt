@@ -1,13 +1,11 @@
 package com.sanapplications.jetkart.presentation.graphs.home_graph
 
-
 import android.telecom.Call.Details
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.sanapplications.jetkart.presentation.graphs.Graph
 import com.sanapplications.jetkart.presentation.graphs.detail_graph.DetailScreen
 import com.sanapplications.jetkart.presentation.graphs.detail_graph.detailNavGraph
@@ -24,9 +22,9 @@ fun HomeNavGraph(navHostController: NavHostController) {
         startDestination = ShopHomeScreen.DashboardScreen.route
     ) {
         composable(ShopHomeScreen.DashboardScreen.route) {
-            DashboardScreen() { productId ->
+            DashboardScreen(onItemClick = { productId ->
                 navHostController.navigate(DetailScreen.ProductDetailScreen.route + "/${productId}")
-            }
+            })
         }
         composable(ShopHomeScreen.FavouriteScreen.route) {
             FavouriteScreen()
@@ -35,9 +33,9 @@ fun HomeNavGraph(navHostController: NavHostController) {
             ConversationScreen()
         }
         composable(ShopHomeScreen.ProfileScreen.route) {
-            ProfileScreen() {
-                navHostController.popBackStack()
-            }
+            ProfileScreen(
+                navController = navHostController
+            )
         }
         //detail graph
         detailNavGraph(navController = navHostController)
