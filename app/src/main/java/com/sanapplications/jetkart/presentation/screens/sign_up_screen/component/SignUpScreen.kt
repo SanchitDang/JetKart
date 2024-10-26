@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.domain.model.AuthState
@@ -32,6 +33,7 @@ import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.common.CustomTextField
 import com.sanapplications.jetkart.presentation.common.component.DefaultBackArrow
 import com.sanapplications.jetkart.presentation.common.component.ErrorSuggestion
+import com.sanapplications.jetkart.presentation.graphs.Graph
 import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryLightColor
@@ -39,7 +41,7 @@ import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun SignUpScreen(navController: NavController) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPass by remember { mutableStateOf(TextFieldValue("")) }
@@ -56,12 +58,13 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel) {
     val addressErrorState = remember { mutableStateOf(false) }
     val animate = remember { mutableStateOf(true) }
 
+    val authViewModel: AuthViewModel = viewModel()
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
         when (authState.value){
-            is AuthState.Authenticated -> navController.navigate("home")
+            is AuthState.Authenticated -> navController.navigate(Graph.HOME)
             is AuthState.Error -> Toast.makeText(context,
                 (authState.value as AuthState. Error).message, Toast.LENGTH_SHORT).show()
             else -> Unit

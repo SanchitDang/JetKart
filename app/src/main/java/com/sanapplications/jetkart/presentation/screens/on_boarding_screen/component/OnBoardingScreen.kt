@@ -1,12 +1,15 @@
 package com.sanapplications.jetkart.presentation.screens.on_boarding_screen.component
 
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -17,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
@@ -25,10 +29,27 @@ import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import com.sanapplications.jetkart.domain.model.AuthState
+import com.sanapplications.jetkart.domain.model.AuthViewModel
+import com.sanapplications.jetkart.presentation.graphs.Graph
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun SplashScreen(navController: NavController) {
+
+    val authViewModel: AuthViewModel = viewModel()
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authState.value) {
+        when (authState.value){
+            is AuthState.Authenticated -> navController.navigate(Graph.HOME)
+            is AuthState.Error -> Toast.makeText(context,
+                (authState.value as AuthState. Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
+
     val splashImageList = listOf(
         R.drawable.splash_1,
         R.drawable.splash_2,
@@ -60,7 +81,7 @@ fun SplashScreen(navController: NavController) {
                     }
                 )
             },
-            content = {
+            content = { padding ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

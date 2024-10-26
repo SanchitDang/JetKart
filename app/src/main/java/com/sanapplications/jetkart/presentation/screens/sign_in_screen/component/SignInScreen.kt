@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.domain.model.AuthState
@@ -38,7 +39,7 @@ import com.sanapplications.jetkart.presentation.ui.theme.PrimaryLightColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 
 @Composable
-fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var checkBox by remember {
@@ -51,6 +52,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
         mutableStateOf(false)
     }
 
+    val authViewModel: AuthViewModel = viewModel()
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
     LaunchedEffect(authState.value) {

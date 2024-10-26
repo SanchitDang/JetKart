@@ -11,13 +11,13 @@ import com.sanapplications.jetkart.presentation.graphs.auth_graph.authNavGraph
 import com.sanapplications.jetkart.presentation.screens.home_screen.component.HomeScreen
 
 @Composable
-fun RootNavigationGraph(navHostController: NavHostController, context: Context, authViewModel: AuthViewModel) {
+fun RootNavigationGraph(navHostController: NavHostController, context: Context) {
     NavHost(
         navController = navHostController,
         route = Graph.ROOT,
         startDestination = Graph.AUTHENTICATION,
     ) {
-        authNavGraph(navHostController, context, authViewModel)
+        authNavGraph(navHostController, context)
         composable(route = Graph.HOME) {
             HomeScreen()
         }

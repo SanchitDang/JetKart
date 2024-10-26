@@ -18,7 +18,7 @@ import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.presentation.graphs.Graph
 
 @Composable
-fun SignInScreen(navController: NavController) {
+fun SignInSuccessScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
