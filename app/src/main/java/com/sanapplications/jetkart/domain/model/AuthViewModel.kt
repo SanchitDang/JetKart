@@ -123,6 +123,13 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         editor.apply() // or editor.commit()
     }
 
+    // Save user image data in SharedPreferences
+    private fun saveUserImageUrlData(userImageUrl: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("USER_IMAGE_URL", userImageUrl)
+        editor.apply() // or editor.commit()
+    }
+
     // Load user data from SharedPreferences
     private fun loadUserData() {
         userUid = sharedPreferences.getString("USER_UID", "")!!
@@ -222,8 +229,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             .addOnSuccessListener {
                 // Retrieve the download URL
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    Log.d("FirebaseStorage", "Image URL: $uri")
                     authViewModel.updateUserImageUrl(uri.toString())
+                    saveUserImageUrlData(uri.toString())
                     val userImageMap  = hashMapOf(
                         "userImageUrl" to uri.toString()
                     )

@@ -66,6 +66,9 @@ fun ProfileScreen(
         uri?.let { authViewModel.uploadImageToFirebase(it, storageRef, authViewModel) }
     }
 
+
+    Log.d("imageeee", authViewModel.userImageUrl)
+
     // UI
     Column(
         modifier = Modifier

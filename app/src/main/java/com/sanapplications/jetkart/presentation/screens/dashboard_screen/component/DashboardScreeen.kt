@@ -1,5 +1,6 @@
 package com.sanapplications.jetkart.presentation.screens.dashboard_screen.component
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
@@ -70,7 +71,7 @@ fun DashboardScreen(
                 fontWeight = FontWeight.Bold
             )
         }
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(30.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier
@@ -81,7 +82,7 @@ fun DashboardScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.flash_icon),
-                    contentDescription = "Flash Deal",
+                    contentDescription = "Deals",
                     modifier = Modifier
                         .background(
                             MaterialTheme.colors.PrimaryLightColor,
@@ -95,7 +96,8 @@ fun DashboardScreen(
                         }
                         .padding(10.dp)
                 )
-                Text(text = "Flash\nDeal", fontSize = 14.sp, textAlign = TextAlign.Center)
+                Spacer(modifier=Modifier.height(4.dp))
+                Text(text = "Deals", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
 
             Column(
@@ -121,6 +123,7 @@ fun DashboardScreen(
                         }
                         .padding(10.dp)
                 )
+                Spacer(modifier=Modifier.height(4.dp))
                 Text(text = "Bill", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
 
@@ -148,6 +151,7 @@ fun DashboardScreen(
                         }
                         .padding(10.dp)
                 )
+                Spacer(modifier=Modifier.height(4.dp))
                 Text(text = "Game", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
 
@@ -160,7 +164,7 @@ fun DashboardScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.gift_icon),
-                    contentDescription = "Daily Gift",
+                    contentDescription = "Gifts",
                     modifier = Modifier
                         .background(
                             MaterialTheme.colors.PrimaryLightColor,
@@ -174,7 +178,8 @@ fun DashboardScreen(
                         }
                         .padding(10.dp)
                 )
-                Text(text = "Daily\nGift", fontSize = 14.sp, textAlign = TextAlign.Center)
+                Spacer(modifier=Modifier.height(4.dp))
+                Text(text = "Gifts", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
 
 
@@ -201,6 +206,7 @@ fun DashboardScreen(
                         }
                         .padding(10.dp)
                 )
+                Spacer(modifier=Modifier.height(4.dp))
                 Text(text = "More", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
         }
@@ -214,7 +220,7 @@ fun DashboardScreen(
             Text(text = "See More", color = MaterialTheme.colors.TextColor)
         }
 
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 //special offer cart
         LazyRow(
             state = popularProductState,
@@ -303,7 +309,7 @@ fun DashboardScreen(
 
 
 
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(30.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -312,7 +318,7 @@ fun DashboardScreen(
             Text(text = "See More", color = MaterialTheme.colors.TextColor)
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
 
         //popular product
