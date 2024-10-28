@@ -389,7 +389,7 @@ fun SignUpScreen(navController: NavController) {
                     phoneNumberErrorState.value = !isPhoneValid
                     if (!isFNameValid && !isLNameValid && !isAddressValid && !isPhoneValid) {
 //                        navController.navigate(AuthScreen.OTPScreen.route)
-                        authViewModel.signUp(email.text, password.text, firstName.text, lastName.text, phoneNumber.text, address.text, navController)
+                        authViewModel.signUp(email.text, password.text, firstName.text, lastName.text, phoneNumber.text, address.text, "https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_640.png", navController)
                     }
                 }
             }

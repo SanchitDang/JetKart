@@ -3,6 +3,8 @@ package com.sanapplications.jetkart.domain.model
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +16,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.storage.StorageReference
 import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
+import java.util.UUID
 
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -38,6 +42,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     var userPhoneNumber by mutableStateOf("")
         private set
     var userAddress by mutableStateOf("")
+        private set
+    var userImageUrl by mutableStateOf("")
         private set
 
     init {
@@ -66,7 +72,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     getUserFromDb(auth.currentUser?.uid.toString()) { user ->
                         saveUserData(
                             user!!.uid, user.email, user.firstName, user.lastName,
-                            user.phoneNumber, user.address
+                            user.phoneNumber, user.address, user.userImageUrl
                         )
                         _authState.value = AuthState.Authenticated
                         navController.navigate(AuthScreen.SignInSuccess.route)
@@ -77,7 +83,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
     }
 
-    fun signUp(email: String, password: String, firstName: String, lastName: String, phoneNumber: String, address: String, navController: NavController) {
+    fun signUp(email: String, password: String, firstName: String, lastName: String, phoneNumber: String, address: String, userImageUrl: String, navController: NavController) {
         if (email.isEmpty() || password.isEmpty()) {
             _authState.value = AuthState.Error("Fields can't be empty")
             return
@@ -87,9 +93,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     saveUserToDb(auth.currentUser?.uid.toString(), email, firstName, lastName,
-                        phoneNumber, address)
+                        phoneNumber, address, userImageUrl)
                     saveUserData(auth.currentUser?.uid.toString(), email, firstName, lastName,
-                        phoneNumber, address)
+                        phoneNumber, address, userImageUrl)
                     _authState.value = AuthState.Authenticated
                     navController.navigate(AuthScreen.SignUpSuccess.route)
                 } else {
@@ -105,7 +111,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Save user data in SharedPreferences
-    private fun saveUserData(uid: String, email: String, firstName: String, lastName: String, phoneNumber: String, address: String) {
+    private fun saveUserData(uid: String, email: String, firstName: String, lastName: String, phoneNumber: String, address: String, userImageUrl: String) {
         val editor = sharedPreferences.edit()
         editor.putString("USER_UID", uid)
         editor.putString("USER_FIRST_NAME", firstName)
@@ -113,6 +119,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         editor.putString("USER_EMAIL", email)
         editor.putString("USER_PHONE_NUMBER", phoneNumber)
         editor.putString("USER_ADDRESS", address)
+        editor.putString("USER_IMAGE_URL", userImageUrl)
         editor.apply() // or editor.commit()
     }
 
@@ -124,6 +131,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         userEmail = sharedPreferences.getString("USER_EMAIL", "")!!
         userPhoneNumber = sharedPreferences.getString("USER_PHONE_NUMBER", "")!!
         userAddress = sharedPreferences.getString("USER_ADDRESS", "")!!
+        userImageUrl = sharedPreferences.getString("USER_IMAGE_URL", "")!!
     }
 
     // Clear user data from SharedPreferences
@@ -134,14 +142,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Function to save user data to Firestore
-    private fun saveUserToDb(documentId: String, email: String, firstName: String, lastName: String, phoneNumber: String, address: String) {
+    private fun saveUserToDb(documentId: String, email: String, firstName: String, lastName: String, phoneNumber: String, address: String, userImageUrl: String) {
         val userMap = hashMapOf(
             "uid" to documentId,
             "email" to email,
             "firstName" to firstName,
             "lastName" to lastName,
             "phoneNumber" to phoneNumber,
-            "address" to address
+            "address" to address,
+            "userImageUrl" to userImageUrl
         )
 
         firestore.collection("users")
@@ -176,7 +185,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 // Successfully updated the Firestore document
                 // Handle success if needed
                 saveUserData(userUid, userEmail, userFirstName,
-                    userLastName, userPhoneNumber, userAddress)
+                    userLastName, userPhoneNumber, userAddress, userImageUrl)
             }
             .addOnFailureListener { e ->
                 // Handle the error
@@ -203,6 +212,31 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             }
     }
 
+    // Function to upload image to Firebase Storage
+    fun uploadImageToFirebase(imageUri: Uri, storageRef: StorageReference, authViewModel: AuthViewModel) {
+        // Create a unique filename for each image
+        val fileName = "images/profile/${UUID.randomUUID()}.jpg"
+        val imageRef = storageRef.child(fileName)
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                // Retrieve the download URL
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    Log.d("FirebaseStorage", "Image URL: $uri")
+                    authViewModel.updateUserImageUrl(uri.toString())
+                    val userImageMap  = hashMapOf(
+                        "userImageUrl" to uri.toString()
+                    )
+                    firestore.collection("users")
+                        .document(userUid)
+                        .set(userImageMap, SetOptions.merge())
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("FirebaseStorage", "Image upload failed: ${exception.message}")
+            }
+    }
+
     // Functions to update each property
     fun updateFirstName(newFirstName: String) {
         userFirstName = newFirstName
@@ -219,6 +253,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun updateAddress(newAddress: String) {
         userAddress = newAddress
     }
+    fun updateUserImageUrl(newUserImageUrl: String) {
+        userImageUrl = newUserImageUrl
+    }
 }
 
 sealed class AuthState {
@@ -234,5 +271,6 @@ data class User(
     val firstName: String = "",
     val lastName: String = "",
     val phoneNumber: String = "",
-    val address: String = ""
+    val address: String = "",
+    val userImageUrl: String = ""
 )

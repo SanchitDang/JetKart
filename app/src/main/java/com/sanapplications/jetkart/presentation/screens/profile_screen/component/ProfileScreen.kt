@@ -1,5 +1,6 @@
 package com.sanapplications.jetkart.presentation.screens.profile_screen.component
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +39,15 @@ import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.graphs.Graph
 import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.util.UUID
 
 @Composable
 fun ProfileScreen(
@@ -45,6 +56,15 @@ fun ProfileScreen(
 
     // Get the AuthViewModel instance
     val authViewModel: AuthViewModel = viewModel()
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val storageRef = FirebaseStorage.getInstance().reference
+
+    // Launcher to pick image from gallery
+    val pickImageLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        imageUri = uri
+        uri?.let { authViewModel.uploadImageToFirebase(it, storageRef, authViewModel) }
+    }
 
     // UI
     Column(
@@ -80,9 +100,10 @@ fun ProfileScreen(
         ) {
             val (image, cameraIcon) = createRefs()
             Image(
-                painter = painterResource(id = R.drawable.profile_image),
+                painter = rememberAsyncImagePainter(authViewModel.userImageUrl),
                 contentDescription = "Profile Image",
                 modifier = Modifier
+                    .size(150.dp)
                     .clip(CircleShape)
                     .constrainAs(image) {
                         linkTo(start = parent.start, end = parent.end)
@@ -94,7 +115,7 @@ fun ProfileScreen(
 
             }) {
 
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {  pickImageLauncher.launch("image/*")  }) {
                     Icon(
                         painter = painterResource(id = R.drawable.camera_icon),
                         contentDescription = "Change Picture",
