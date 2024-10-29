@@ -15,10 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sanapplications.jetkart.presentation.dashboard_screen.component.AppBar
-import com.sanapplications.jetkart.presentation.dashboard_screen.component.NavigationBar
 import com.sanapplications.jetkart.presentation.graphs.detail_graph.DetailScreen
 import com.sanapplications.jetkart.presentation.graphs.home_graph.HomeNavGraph
-import com.sanapplications.jetkart.presentation.graphs.home_graph.ShopHomeScreen
 
 @SuppressLint("RememberReturnType")
 @Composable

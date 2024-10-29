@@ -1,6 +1,5 @@
-package com.sanapplications.jetkart.presentation.dashboard_screen.component
+package com.sanapplications.jetkart.presentation.screens.home_screen.component
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -28,7 +27,6 @@ fun NavigationBar(
     val navItemList = listOf(
         BottomNavItem.HomeNav,
         BottomNavItem.FavouriteNav,
-        BottomNavItem.ChatNav,
         BottomNavItem.ProfileNav,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()

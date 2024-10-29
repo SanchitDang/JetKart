@@ -1,6 +1,5 @@
 package com.sanapplications.jetkart.presentation.screens.dashboard_screen.component
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
@@ -17,28 +16,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.graphics.toColor
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.sanapplications.jetkart.R
-import com.sanapplications.jetkart.presentation.graphs.Graph
-import com.sanapplications.jetkart.presentation.graphs.detail_graph.DetailScreen
+import com.sanapplications.jetkart.presentation.common.component.ProductItem
 import com.sanapplications.jetkart.presentation.screens.dashboard_screen.DashboardViewModel
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryLightColor
-import com.sanapplications.jetkart.presentation.ui.theme.SecondaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun DashboardScreen(
@@ -71,7 +62,9 @@ fun DashboardScreen(
                 fontWeight = FontWeight.Bold
             )
         }
+
         Spacer(modifier = Modifier.height(30.dp))
+
         Row(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier
@@ -127,7 +120,6 @@ fun DashboardScreen(
                 Text(text = "Bill", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
 
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -182,7 +174,6 @@ fun DashboardScreen(
                 Text(text = "Gifts", fontSize = 14.sp, textAlign = TextAlign.Center)
             }
 
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -212,16 +203,17 @@ fun DashboardScreen(
         }
 
         Spacer(modifier = Modifier.height(30.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Special for you", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(text = "See More", color = MaterialTheme.colors.TextColor)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-//special offer cart
+
+        //special offer cart
         LazyRow(
             state = popularProductState,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -262,8 +254,6 @@ fun DashboardScreen(
                         Spacer(modifier = Modifier.heightIn(15.dp))
                         Text(text = "85 Brands", color = Color.White)
                     }
-
-
                 }
             }
             item {
@@ -307,9 +297,8 @@ fun DashboardScreen(
 
         }
 
-
-
         Spacer(modifier = Modifier.height(30.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -320,83 +309,19 @@ fun DashboardScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         //popular product
         LazyRow(
             state = suggestionProductState,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(horizontal = 10.dp)
         ) {
-            items(state.product!!.size) {
-
-                //favourite state rememberable
-                var favouriteRemember by remember { mutableStateOf(state.product[it].isFavourite) }
-
-                Column {
-                    Box(
-                        modifier = Modifier
-                            .size(150.dp)
-                            .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable {
-                                onItemClick(state.product[it].id)
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = state.product[it].images[0]),
-                            contentDescription = state.product[it].description
-                        )
-                    }
-                    Text(
-                        text = state.product[it].title,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.width(150.dp)
-                    )
-
-
-                    Row(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "$ ${state.product[it].price}",
-                            fontWeight = FontWeight(600),
-                            color = MaterialTheme.colors.PrimaryColor
-                        )
-                        Box(
-                            modifier = Modifier
-                                .size(20.dp)
-                                .background(
-                                    MaterialTheme.colors.PrimaryLightColor,
-                                    shape = CircleShape
-                                )
-                                .clip(CircleShape)
-                                .clickable {
-                                    favouriteRemember = !favouriteRemember
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            Image(
-                                painter = painterResource(
-                                    id = if (favouriteRemember)
-                                        R.drawable.heart_icon_2
-                                    else R.drawable.heart_icon
-                                ),
-                                contentDescription = "Favourite Icon",
-                                modifier = Modifier.padding(3.dp),
-                                colorFilter = if (favouriteRemember) ColorFilter.tint(
-                                    Color.Red
-                                ) else null
-                            )
-                        }
-                    }
-
-                }
+            items(state.product!!.size) { index ->
+                val product = state.product[index]
+                ProductItem(
+                    product = product,
+                    onItemClick = { onItemClick(product.id) },
+                    onFavoriteToggle = { productViewModel.toggleFavorite(product.id) }
+                )
             }
         }
     }
