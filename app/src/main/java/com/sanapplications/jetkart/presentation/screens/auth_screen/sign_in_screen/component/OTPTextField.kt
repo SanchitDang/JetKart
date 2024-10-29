@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.sign_in_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.sign_in_screen.component
 
 
 import androidx.compose.foundation.layout.width

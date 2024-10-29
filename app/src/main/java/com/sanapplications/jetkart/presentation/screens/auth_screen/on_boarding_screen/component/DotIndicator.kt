@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.on_boarding_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.on_boarding_screen.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.domain.model.ProductModel
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
@@ -48,7 +49,7 @@ fun ProductItem(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = product.images[0]),
+                painter = rememberAsyncImagePainter(product.images[0]),
                 contentDescription = product.description
             )
         }

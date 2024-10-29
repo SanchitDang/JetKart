@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.otp_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.otp_screen.component
 
 
 import android.os.CountDownTimer
@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.common.component.DefaultBackArrow
 import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
-import com.sanapplications.jetkart.presentation.screens.sign_in_screen.component.OTPTexField
+import com.sanapplications.jetkart.presentation.screens.auth_screen.sign_in_screen.component.OTPTexField
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 

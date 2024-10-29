@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.sanapplications.jetkart.R
 import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.screens.product_detail_screen.ProductDetailViewModel
@@ -112,7 +113,7 @@ fun ProductDetailScreen(
             }
             //image
             Image(
-                painter = painterResource(id = selectedPicture),
+                painter = rememberAsyncImagePainter(selectedPicture),
                 contentDescription = null,
                 modifier = Modifier.size(250.dp)
             )
@@ -137,7 +138,7 @@ fun ProductDetailScreen(
                             .clip(RoundedCornerShape(10.dp))
                     ) {
                         Image(
-                            painter = painterResource(id = product.images[it]),
+                            painter = rememberAsyncImagePainter(product.images[it]),
                             contentDescription = null,
                         )
 
@@ -242,7 +243,10 @@ fun ProductDetailScreen(
                                         shape = CircleShape
                                     )
                                     .padding(5.dp)
-                                    .background(color = product.colors[it], shape = CircleShape)
+                                    .background(
+                                        color = Color.White,
+//                                        Color(product.colors[it]),
+                                        shape = CircleShape)
                                     .clip(CircleShape)
                                     .clickable {
                                         colorSelected = product.colors[it]

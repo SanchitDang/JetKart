@@ -9,13 +9,21 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+import com.google.firebase.firestore.FirebaseFirestore
+
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+
     @Provides
     @Singleton
     fun provideProductRepository(demoDB: DemoDB): ProductRepository {
         return ProductRepositoryImp(demoDB)
     }
 
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
 }

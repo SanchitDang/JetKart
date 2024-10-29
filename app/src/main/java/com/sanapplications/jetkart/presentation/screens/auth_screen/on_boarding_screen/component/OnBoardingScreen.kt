@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.on_boarding_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.on_boarding_screen.component
 
 import android.widget.Toast
 import androidx.compose.animation.*
@@ -29,8 +29,8 @@ import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import com.sanapplications.jetkart.domain.model.AuthState
-import com.sanapplications.jetkart.domain.model.AuthViewModel
+import com.sanapplications.jetkart.presentation.screens.auth_screen.AuthState
+import com.sanapplications.jetkart.presentation.screens.auth_screen.AuthViewModel
 import com.sanapplications.jetkart.presentation.graphs.Graph
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)

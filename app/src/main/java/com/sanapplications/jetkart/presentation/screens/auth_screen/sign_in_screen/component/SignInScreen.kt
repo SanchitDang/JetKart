@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.sign_in_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.sign_in_screen.component
 
 import android.util.Patterns
 import android.widget.Toast
@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sanapplications.jetkart.R
-import com.sanapplications.jetkart.domain.model.AuthState
-import com.sanapplications.jetkart.domain.model.AuthViewModel
+import com.sanapplications.jetkart.presentation.screens.auth_screen.AuthState
+import com.sanapplications.jetkart.presentation.screens.auth_screen.AuthViewModel
 import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
 import com.sanapplications.jetkart.presentation.common.CustomTextField
 import com.sanapplications.jetkart.presentation.common.component.DefaultBackArrow

@@ -4,51 +4,56 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sanapplications.jetkart.domain.use_case.get_product.GetProductUseCase
-import com.sanapplications.jetkart.common.Resource
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sanapplications.jetkart.domain.model.ProductModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val productUseCase: GetProductUseCase
+    private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
     private val _state = mutableStateOf(ProductState())
     val state: State<ProductState> = _state
 
     init {
-        getProduct()
+        Log.d("hehhe", "ininni")
+        getProductsFromDb()
     }
 
-    private fun getProduct() {
-        productUseCase().onEach { result ->
-            when (result) {
-                is Resource.Loading -> {
-                    _state.value = ProductState(isLoading = true)
-                }
-                is Resource.Success -> {
-                    _state.value = ProductState(product = result.data ?: emptyList())
-                }
-                is Resource.Error -> {
-                    _state.value = ProductState(errorMessage = result.message ?: "Unexpected error.")
+    private fun getProductsFromDb() {
+        _state.value = ProductState(isLoading = true)
+
+        firestore.collection("products")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val products = task.result?.mapNotNull { document ->
+                        document.toObject(ProductModel::class.java)
+                    } ?: emptyList()
+
+                    // Log the first product if it exists
+                    if (products.isNotEmpty()) {
+                        Log.d("products length:", products.size.toString())
+                    }
+
+                    // Update state with fetched products
+                    _state.value = ProductState(product = products, isLoading = false)
+                } else {
+                    // Handle failure
+                    val errorMessage = task.exception?.message ?: "Error fetching products."
+                    Log.e("FirestoreError", errorMessage) // Log the error
+                    _state.value = ProductState(product = emptyList(), isLoading = false, errorMessage = errorMessage) // Update state with error
                 }
             }
-        }.launchIn(viewModelScope)
     }
 
-    // Toggle isFavourite for a product by ID
-    fun toggleFavorite(productId: Int) {
+    fun toggleFavorite(productId: String) {
         _state.value = _state.value.copy(
             product = _state.value.product?.map { product ->
                 if (product.id == productId) {
-                    Log.d("",productId.toString())
+                    Log.d("ToggleFavorite", productId.toString())
                     product.copy(isFavourite = !product.isFavourite)
                 } else {
                     product

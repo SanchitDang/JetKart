@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.forget_password_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.forget_password_screen.component
 
 import android.util.Patterns
 import androidx.compose.foundation.clickable

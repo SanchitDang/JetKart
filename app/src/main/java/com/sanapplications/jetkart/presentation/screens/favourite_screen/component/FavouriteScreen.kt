@@ -24,7 +24,7 @@ import com.sanapplications.jetkart.presentation.common.component.ProductItem
 @Composable
 fun FavouriteScreen(
     productViewModel: DashboardViewModel,
-    onItemClick: (Int) -> Unit
+    onItemClick: (String) -> Unit
 ) {
     val state = productViewModel.state.value
 

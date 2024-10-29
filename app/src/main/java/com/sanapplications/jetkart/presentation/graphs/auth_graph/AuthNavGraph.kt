@@ -6,13 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.sanapplications.jetkart.presentation.graphs.Graph
-import com.sanapplications.jetkart.presentation.screens.forget_password_screen.component.ForgetPasswordScreen
-import com.sanapplications.jetkart.presentation.screens.on_boarding_screen.component.SplashScreen
-import com.sanapplications.jetkart.presentation.screens.otp_screen.component.OTPScreen
-import com.sanapplications.jetkart.presentation.screens.sign_in_screen.component.LoginScreen
-import com.sanapplications.jetkart.presentation.screens.sign_success_screen.component.SignInSuccessScreen
-import com.sanapplications.jetkart.presentation.screens.sign_success_screen.component.SignUpSuccessScreen
-import com.sanapplications.jetkart.presentation.screens.sign_up_screen.component.SignUpScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.forget_password_screen.component.ForgetPasswordScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.on_boarding_screen.component.SplashScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.otp_screen.component.OTPScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.sign_in_screen.component.LoginScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.success_screen.component.SignInSuccessScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.success_screen.component.SignUpSuccessScreen
+import com.sanapplications.jetkart.presentation.screens.auth_screen.sign_up_screen.component.SignUpScreen
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController, context: Context) {
     navigation(

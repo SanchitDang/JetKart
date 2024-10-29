@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.presentation.screens.sign_success_screen.component
+package com.sanapplications.jetkart.presentation.screens.auth_screen.success_screen.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

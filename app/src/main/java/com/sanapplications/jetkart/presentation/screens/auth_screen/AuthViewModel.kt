@@ -1,4 +1,4 @@
-package com.sanapplications.jetkart.domain.model
+package com.sanapplications.jetkart.presentation.screens.auth_screen
 
 import android.app.Application
 import android.content.Context
@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.StorageReference
+import com.sanapplications.jetkart.domain.model.UserModel
 import com.sanapplications.jetkart.presentation.graphs.auth_graph.AuthScreen
 import java.util.UUID
 
@@ -78,7 +79,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                         navController.navigate(AuthScreen.SignInSuccess.route)
                     }
                 } else {
-                    _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
+                    _authState.value =
+                        AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
     }
@@ -99,7 +101,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     _authState.value = AuthState.Authenticated
                     navController.navigate(AuthScreen.SignUpSuccess.route)
                 } else {
-                    _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
+                    _authState.value =
+                        AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
     }
@@ -201,14 +204,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Function to retrieve user data from Firestore
-    private fun getUserFromDb(documentId: String, onResult: (User?) -> Unit) {
+    private fun getUserFromDb(documentId: String, onResult: (UserModel?) -> Unit) {
         firestore.collection("users")
             .document(documentId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val user = document.toObject<User>()
-                    onResult(user)
+                    val userModel = document.toObject<UserModel>()
+                    onResult(userModel)
                 } else {
                     onResult(null) // Document does not exist
                 }
@@ -264,20 +267,3 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         userImageUrl = newUserImageUrl
     }
 }
-
-sealed class AuthState {
-    object Authenticated : AuthState()
-    object Unauthenticated : AuthState()
-    object Loading : AuthState()
-    data class Error(val message: String) : AuthState()
-}
-
-data class User(
-    val uid: String = "",
-    val email: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
-    val phoneNumber: String = "",
-    val address: String = "",
-    val userImageUrl: String = ""
-)
