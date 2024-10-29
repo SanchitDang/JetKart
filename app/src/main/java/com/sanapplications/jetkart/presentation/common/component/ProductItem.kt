@@ -74,7 +74,7 @@ fun ProductItem(
                 modifier = Modifier
                     .size(20.dp)
                     .background(
-                        MaterialTheme.colors.PrimaryLightColor,
+                        Color.White,
                         shape = CircleShape
                     )
                     .clip(CircleShape)
