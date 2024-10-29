@@ -1,48 +1,38 @@
 package com.sanapplications.jetkart.presentation.screens.product_detail_screen
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sanapplications.jetkart.common.Constrains
-import com.sanapplications.jetkart.domain.use_case.get_product_detail.GetProductDetailUseCase
-import com.sanapplications.jetkart.common.Resource
+import com.sanapplications.jetkart.domain.model.ProductModel
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductDetailViewModel @Inject constructor(
-    private val getProductDetailUseCase: GetProductDetailUseCase,
-    stateHandle: SavedStateHandle
-) : ViewModel() {
-    //state
-    private val _state = mutableStateOf<ProductDetailState>(ProductDetailState())
+class ProductDetailViewModel @Inject constructor() : ViewModel() {
+
+    private val _state = mutableStateOf(ProductDetailState())
     val state: State<ProductDetailState> = _state
 
-    init {
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-        val productId = stateHandle.get<String>(Constrains.PRODUCT_ID_PARAM)
-        getProductDetail(productId!!.toInt())
-    }
+    fun getProductDetail(productId: String) {
+        _state.value = ProductDetailState(isLoading = true)
 
-    private fun getProductDetail(productId: Int) {
-        getProductDetailUseCase(productId).onEach { result ->
-            when (result) {
-                is Resource.Loading -> {
-                    _state.value = ProductDetailState(isLoading = true)
-                }
-                is Resource.Success -> {
-                    _state.value = ProductDetailState(productDetail = result.data)
+        firestore.collection("products").document(productId).get()
+            .addOnSuccessListener { document ->
+                val productDetail = document?.toObject(ProductModel::class.java)
 
-                }
-                is Resource.Error -> {
-                    _state.value = ProductDetailState(errorMessage = result.message!!)
+                if (productDetail != null) {
+                    _state.value = ProductDetailState(productDetail = productDetail)
+                    Log.d("ProductDetail", "Product ID: ${productDetail.id}")
+                } else {
+                    _state.value = ProductDetailState(errorMessage = "Product not found.")
                 }
             }
-
-        }.launchIn(viewModelScope)
+            .addOnFailureListener { exception ->
+                _state.value = ProductDetailState(errorMessage = exception.message ?: "Error fetching product.")
+            }
     }
 }

@@ -1,6 +1,5 @@
 package com.sanapplications.jetkart.presentation.screens.product_detail_screen.component
 
-import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -22,49 +21,46 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.toColorInt
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.sanapplications.jetkart.R
-import com.sanapplications.jetkart.presentation.common.CustomDefaultBtn
-import com.sanapplications.jetkart.presentation.screens.product_detail_screen.ProductDetailViewModel
+import com.sanapplications.jetkart.domain.model.ProductModel
 import com.sanapplications.jetkart.presentation.ui.theme.PrimaryColor
-import com.sanapplications.jetkart.presentation.ui.theme.PrimaryLightColor
 import com.sanapplications.jetkart.presentation.ui.theme.TextColor
 
 @Composable
 fun ProductDetailScreen(
-    viewModel: ProductDetailViewModel = hiltViewModel(),
+    product: ProductModel?,
+    isLoading: Boolean,
+    errorMessage: String?,
     popBack: () -> Unit
 ) {
-    val state = viewModel.state.value
     val context = LocalContext.current
-    if (state.isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            CircularProgressIndicator()
+
+    // Check if the product is null or loading
+    if (isLoading) {
+        // Show a loading indicator while fetching data
+       Text(text = "LOADING")
+    } else {
+        // If product is null after loading, display a not found message
+        if (product == null) {
+            Text("Product not found", color = MaterialTheme.colors.error)
+            return // Exit the function early to avoid rendering below UI
         }
-    } else if (state.productDetail != null) {
-        val product = state.productDetail
-        var colorSelected by remember { mutableStateOf(product.colors[product.colors.size - 1]) }
-        var selectedPicture by remember { mutableStateOf(product.images[0]) }
+
+        // State variables
+        var colorSelected by remember { mutableStateOf(product.colors.last()) }
+        var selectedPicture by remember { mutableStateOf(product.images.first()) }
         var quantity by remember { mutableStateOf(1) }
 
-
-
+        // Main UI
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color(0x8DB3B0B0)),
             horizontalAlignment = Alignment.CenterHorizontally,
-
-            ) {
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,13 +69,10 @@ fun ProductDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = {
-                        popBack()
-                    },
+                    onClick = popBack,
                     modifier = Modifier
                         .background(color = Color.White, shape = CircleShape)
                         .clip(CircleShape)
-
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.back_icon),
@@ -92,10 +85,7 @@ fun ProductDetailScreen(
                         .background(color = Color.White, shape = RoundedCornerShape(8.dp))
                         .padding(3.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        4.dp,
-                        Alignment.CenterHorizontally
-                    ),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -108,29 +98,25 @@ fun ProductDetailScreen(
                         contentDescription = null
                     )
                 }
-
-
             }
-            //image
+
+            // Product image
             Image(
                 painter = rememberAsyncImagePainter(selectedPicture),
                 contentDescription = null,
                 modifier = Modifier.size(250.dp)
             )
 
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                items(product.images.size) {
+            // Thumbnail images
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                items(product.images.size) { index ->
                     IconButton(
-                        onClick = {
-                            selectedPicture = product.images[it]
-                        },
+                        onClick = { selectedPicture = product.images[index] },
                         modifier = Modifier
                             .size(50.dp)
                             .border(
                                 width = 1.dp,
-                                color = if (selectedPicture == product.images[it]) MaterialTheme.colors.PrimaryColor else Color.Transparent,
+                                color = if (selectedPicture == product.images[index]) MaterialTheme.colors.PrimaryColor else Color.Transparent,
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .background(Color.White, shape = RoundedCornerShape(10.dp))
@@ -138,14 +124,13 @@ fun ProductDetailScreen(
                             .clip(RoundedCornerShape(10.dp))
                     ) {
                         Image(
-                            painter = rememberAsyncImagePainter(product.images[it]),
+                            painter = rememberAsyncImagePainter(product.images[index]),
                             contentDescription = null,
                         )
-
                     }
                 }
-
             }
+
             Spacer(modifier = Modifier.height(50.dp))
             Column(
                 modifier = Modifier
@@ -154,12 +139,9 @@ fun ProductDetailScreen(
                         Color.White,
                         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
                     )
-                //   .padding(15.dp)
             ) {
-
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
@@ -172,9 +154,7 @@ fun ProductDetailScreen(
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp
                         )
-
                         Spacer(modifier = Modifier.height(25.dp))
-
                         Text(
                             text = product.description,
                             fontSize = 16.sp,
@@ -189,18 +169,15 @@ fun ProductDetailScreen(
                                 text = "See more Details",
                                 color = MaterialTheme.colors.PrimaryColor,
                                 fontSize = 16.sp,
-
-                                )
+                            )
                             Icon(
                                 painter = painterResource(id = R.drawable.arrow_right),
                                 contentDescription = "",
                                 tint = MaterialTheme.colors.PrimaryColor
                             )
                         }
-
-
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { /* TODO: Handle favorite toggle */ }) {
                         Image(
                             painter = painterResource(id = R.drawable.heart_icon_2),
                             contentDescription = null,
@@ -220,6 +197,7 @@ fun ProductDetailScreen(
                     }
                 }
 
+                // Color selection
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -231,42 +209,31 @@ fun ProductDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                        items(product.colors.size) {
+                        items(product.colors.size) { index ->
                             Box(
                                 modifier = Modifier
                                     .size(30.dp)
                                     .border(
                                         width = 1.dp,
-                                        color = if (colorSelected == product.colors[it]) MaterialTheme.colors.PrimaryColor else Color.Transparent,
+                                        color = if (colorSelected == product.colors[index]) MaterialTheme.colors.PrimaryColor else Color.Transparent,
                                         shape = CircleShape
                                     )
                                     .padding(5.dp)
-                                    .background(
-                                        color = Color.White,
-//                                        Color(product.colors[it]),
-                                        shape = CircleShape)
+                                    .background( Color(product.colors[index].removePrefix("0x").toLong(16)), shape = CircleShape)
                                     .clip(CircleShape)
                                     .clickable {
-                                        colorSelected = product.colors[it]
+                                        colorSelected = product.colors[index]
                                     }
                             )
                         }
                     }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(
-                            onClick = {
-                                if (quantity > 1) {
-                                    quantity--
-                                }
-                            },
+                            onClick = { if (quantity > 1) quantity-- },
                             modifier = Modifier
                                 .background(color = Color.White, shape = CircleShape)
                                 .clip(CircleShape)
-
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.remove),
@@ -285,17 +252,12 @@ fun ProductDetailScreen(
                                 if (quantity < 5) {
                                     quantity++
                                 } else {
-                                    Toast.makeText(
-                                        context,
-                                        "You can add maximum 5 item at a time.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(context, "You can add a maximum of 5 items at a time.", Toast.LENGTH_SHORT).show()
                                 }
                             },
                             modifier = Modifier
                                 .background(color = Color.White, shape = CircleShape)
                                 .clip(CircleShape)
-
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.plus_icon),
@@ -305,7 +267,7 @@ fun ProductDetailScreen(
                     }
                 }
 
-
+                // Add to cart button
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -328,27 +290,13 @@ fun ProductDetailScreen(
                             .height(60.dp)
                             .clip(RoundedCornerShape(15.dp)),
                         onClick = {
-                            Toast.makeText(
-                                context,
-                                "Successfully added to cart",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
+                            Toast.makeText(context, "Successfully added to cart", Toast.LENGTH_SHORT).show()
                         },
                     ) {
                         Text(text = "Add to Cart", fontSize = 16.sp)
                     }
                 }
-
-
             }
-
-
         }
-
-    } else {
-        Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
     }
-
-
 }
