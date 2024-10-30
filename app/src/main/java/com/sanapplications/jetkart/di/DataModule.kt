@@ -11,7 +11,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
-
     @Provides
     @Singleton
     fun provideFirebaseFirestore(): FirebaseFirestore {
